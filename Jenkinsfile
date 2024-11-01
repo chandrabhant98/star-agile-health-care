@@ -31,8 +31,10 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernameColonPassword(credentialsId: 'Dockerlogin-user', variable: 'DOCKER_CREDENTIALS')]) {
-                        // Log in to Docker Hub
-                        sh "docker login -u ${DOCKER_CREDENTIALS.split(':')[0]} -p ${DOCKER_CREDENTIALS.split(':')[1]}"
+                        // Log in to Docker Hub using --password-stdin
+                        sh '''
+                            echo ${DOCKER_CREDENTIALS.split(':')[1]} | docker login -u ${DOCKER_CREDENTIALS.split(':')[0]} --password-stdin
+                        '''
                         
                         // Push the Docker image
                         sh "docker push ${DOCKER_IMAGE}"
