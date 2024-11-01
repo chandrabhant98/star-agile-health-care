@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub_credentials'  // Replace with your Docker Hub credentials ID
         AWS_CREDENTIALS_ID = 'aws_credentials'           // Replace with your AWS credentials ID
-        DOCKER_IMAGE = "your-dockerhub-username/healthcareapp:1.0" // Replace with your Docker Hub username
+        DOCKER_IMAGE = "chandrabhant98/healthcareapp:1.0" // Update to match the build stage
     }
 
     stages {
@@ -23,7 +23,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building the docker image...'
-                sh 'docker build -t chandrabhant98/healthcareapp:1.0 .'
+                sh "docker build -t ${DOCKER_IMAGE} ." // Use DOCKER_IMAGE variable for tagging
             }
         }
 
