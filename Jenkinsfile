@@ -33,7 +33,9 @@ pipeline {
                     withCredentials([usernameColonPassword(credentialsId: 'Dockerlogin-user', variable: 'DOCKER_CREDENTIALS')]) {
                         // Log in to Docker Hub using --password-stdin
                         sh '''
-                            echo ${DOCKER_CREDENTIALS.split(':')[1]} | docker login -u ${DOCKER_CREDENTIALS.split(':')[0]} --password-stdin
+                            USERNAME=$(echo $DOCKER_CREDENTIALS | cut -d':' -f1)
+                            PASSWORD=$(echo $DOCKER_CREDENTIALS | cut -d':' -f2)
+                            echo $PASSWORD | docker login -u $USERNAME --password-stdin
                         '''
                         
                         // Push the Docker image
