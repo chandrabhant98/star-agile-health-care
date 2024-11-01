@@ -22,9 +22,9 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build(DOCKER_IMAGE)
-                }
+                echo 'Building the docker image...'
+                sh 'docker build -t chandrabhant98/healthcareapp:1.0 .'
+                
             }
         }
 
