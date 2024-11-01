@@ -24,14 +24,17 @@ pipeline {
             steps {
                 echo 'Building the docker image...'
                 sh 'docker build -t chandrabhant98/healthcareapp:1.0 .'
-                
             }
         }
 
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                    withCredentials([usernameColonPassword(credentialsId: 'Dockerlogin-user', variable: 'DOCKER_CREDENTIALS')]) {
+                        // Log in to Docker Hub
+                        sh "docker login -u ${DOCKER_CREDENTIALS.split(':')[0]} -p ${DOCKER_CREDENTIALS.split(':')[1]}"
+                        
+                        // Push the Docker image
                         sh "docker push ${DOCKER_IMAGE}"
                     }
                 }
