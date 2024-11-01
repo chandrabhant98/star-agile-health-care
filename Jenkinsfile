@@ -5,7 +5,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'dockerhub_credentials'  // Replace with your Docker Hub credentials ID
         AWS_CREDENTIALS_ID = 'JenkinsIAMuser'             // Replace with your AWS credentials ID
         DOCKER_IMAGE = "chandrabhant98/healthcareapp:1.0" // Update to match the build stage
-        WORKING_DIR = "/path/to/your/terraform/configuration" // Update with your actual Terraform configuration path
+        WORKING_DIR = "${WORKSPACE}/terraform"            // Path to your Terraform configuration directory
     }
 
     stages {
@@ -46,7 +46,7 @@ pipeline {
         stage('Provision Infrastructure') {
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: AWS_CREDENTIALS_ID, secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    dir("${WORKING_DIR}") { // Set the working directory for Terraform
+                    dir("${WORKING_DIR}") { // Navigate to the Terraform directory
                         sh '''
                             terraform init
                             terraform validate
@@ -63,7 +63,7 @@ pipeline {
                     input message: 'Do you want to destroy the infrastructure?', ok: 'Yes, Destroy'
                 }
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: AWS_CREDENTIALS_ID, secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    dir("${WORKING_DIR}") { // Set the working directory for Terraform
+                    dir("${WORKING_DIR}") { // Navigate to the Terraform directory
                         sh '''
                             terraform init
                             terraform destroy -auto-approve
